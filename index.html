@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Eight Weeks to Launch: an interactive course-build planning activity by Keith Pace.">
+<title>Eight Weeks to Launch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Layout: a seminary course page. Navy masthead with a gold rule, the project brief as a ruled list, then a full-width build timeline (Gantt) with a workload strip underneath, then the weekly status email. Colors follow Emory's public brand palette (navy and gold); type pairs a Caslon serif with a humanist sans. */
+:root{
+  --bg:#f4f5f7;--surface:#ffffff;--ink:#0c1a33;--muted:#4c586b;--line:#d5dbe4;
+  --navy:#012169;--navy-soft:#e6ebf5;--gold:#f2a900;--gold-ink:#6e4d00;--gold-soft:#fcf1d4;
+  --warn:#9b2c1e;--warn-soft:#fbe9e6;--ok:#1f6b3a;--ok-soft:#e5f2e9;--focus:#0b5fd6;
+  --bar-d:#012169;--bar-d-text:#ffffff;
+  --font-read:"Libre Caslon Text",Georgia,"Times New Roman",serif;
+  --font-ui:"Source Sans 3","Segoe UI",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0a1120;--surface:#111a2e;--ink:#e9edf5;--muted:#a9b4c8;--line:#27334f;
+  --navy:#a3b8ee;--navy-soft:#1a2747;--gold:#f2a900;--gold-ink:#f2c45a;--gold-soft:#2a2414;
+  --warn:#ff9b8a;--warn-soft:#3a1d1a;--ok:#7fd49b;--ok-soft:#14301f;--focus:#8fb4ff;
+  --bar-d:#a3b8ee;--bar-d-text:#0a1120;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0a1120;--surface:#111a2e;--ink:#e9edf5;--muted:#a9b4c8;--line:#27334f;
+  --navy:#a3b8ee;--navy-soft:#1a2747;--gold:#f2a900;--gold-ink:#f2c45a;--gold-soft:#2a2414;
+  --warn:#ff9b8a;--warn-soft:#3a1d1a;--ok:#7fd49b;--ok-soft:#14301f;--focus:#8fb4ff;
+  --bar-d:#a3b8ee;--bar-d-text:#0a1120;color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-ui);font-size:17px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+a{color:var(--navy)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+h1,h2,h3{font-family:var(--font-read);font-weight:400;text-wrap:balance;line-height:1.2;margin:0}
+.wrap{max-width:1160px;margin:0 auto;display:grid;gap:56px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.masthead{background:#012169;color:#fff;border-bottom:5px solid #f2a900;margin-bottom:36px;
+  margin-left:calc(-1 * max(16px,env(safe-area-inset-left,0px)));margin-right:calc(-1 * max(16px,env(safe-area-inset-right,0px)));
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mh-in{max-width:1160px;margin:0 auto;padding-block:18px 20px;display:flex;flex-wrap:wrap;gap:10px 24px;align-items:flex-end;justify-content:space-between}
+.mh-kicker{display:block;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#d7def0;margin-bottom:4px}
+.mh-course{font-family:var(--font-read);font-size:clamp(20px,2.6vw,26px);color:#fff}
+.mh-mod{font-size:15px;color:#fff;border-left:2px solid #f2a900;padding-left:12px}
+
+.faiths{width:min(360px,100%);height:auto;color:var(--gold-ink);opacity:.95}
+.faithband{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.faithband small{font-size:14px;color:var(--muted)}
+.hero{display:grid;gap:14px}
+.hero>*{max-width:780px}
+.eyebrow{font-size:14px;font-weight:700;color:var(--gold-ink);letter-spacing:.04em}
+.hero h1{font-size:clamp(36px,5.4vw,56px)}
+.hero p{margin:0;color:var(--muted);font-size:18px;max-width:64ch}
+.byline b{color:var(--ink);font-weight:600}
+
+section{display:grid;gap:18px;min-width:0}
+.sec-head{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:22px}
+.step{font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-ink)}
+.sec-head h2{font-size:clamp(26px,3.4vw,34px)}
+.sec-head p{margin:0;color:var(--muted);max-width:70ch}
+
+/* brief */
+.brief{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:28px;align-items:start}
+.facts{margin:0;display:grid;grid-template-columns:150px minmax(0,1fr);border-top:1px solid var(--line)}
+.facts dt,.facts dd{margin:0;padding:10px 0;border-bottom:1px solid var(--line)}
+.facts dt{font-weight:700;font-size:15px}
+.facts dd{color:var(--ink)}
+.quote{background:var(--surface);border:1px solid var(--line);border-left:4px solid #f2a900;padding:18px 20px;display:grid;gap:8px}
+.quote blockquote{margin:0;font-family:var(--font-read);font-size:18px;line-height:1.6}
+.quote .who{font-size:14px;color:var(--muted)}
+.capt{width:100%;border-collapse:collapse;font-size:15px;font-variant-numeric:tabular-nums}
+.capt th,.capt td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+.capt th{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* toolbar */
+.toolbar{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--navy);padding:14px 18px}
+.weeknow{display:grid;gap:2px}
+.weeknow b{font-family:var(--font-read);font-weight:400;font-size:24px}
+.status{font-weight:700;font-size:15px;padding:4px 10px;border-radius:2px;display:inline-flex;gap:6px;align-items:center}
+.status.ok{background:var(--ok-soft);color:var(--ok)}
+.status.risk{background:var(--warn-soft);color:var(--warn)}
+.btn{font:700 15px var(--font-ui);background:var(--navy);color:var(--surface);border:0;border-radius:2px;padding:11px 18px;cursor:pointer}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--navy);border:1px solid var(--navy)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;color:var(--muted)}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.sw{width:18px;height:12px;display:inline-block;border-radius:1px}
+
+/* event */
+.event{background:var(--gold-soft);border:1px solid var(--line);border-left:4px solid #f2a900;padding:18px 20px;display:grid;gap:12px}
+.event h3{font-size:22px}
+.event p{margin:0}
+.choices{display:grid;gap:8px}
+.choice{text-align:left;font:16px/1.45 var(--font-ui);color:var(--ink);background:var(--surface);border:1px solid var(--muted);border-radius:2px;padding:12px 14px;cursor:pointer}
+.choice:hover{border-color:var(--navy)}
+.choice b{display:block}
+.choice span{color:var(--muted);font-size:15px}
+
+/* gantt */
+.gwrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line)}
+.gantt{--W:8;min-width:760px;display:grid}
+.grow{display:grid;grid-template-columns:240px minmax(0,1fr);border-bottom:1px solid var(--line);min-height:52px}
+.grow:last-child{border-bottom:0}
+.gname{padding:8px 12px;display:grid;gap:2px;align-content:center;border-right:1px solid var(--line);position:sticky;left:0;background:var(--surface);z-index:2}
+.gname b{font-size:15px;line-height:1.25}
+.gname small{font-size:13px;color:var(--muted)}
+.own{font-weight:700}
+.own.f{color:var(--gold-ink)}.own.d{color:var(--navy)}.own.b{color:var(--muted)}
+.gtrack{position:relative;background-image:repeating-linear-gradient(to right,transparent 0,transparent calc(100%/var(--W) - 1px),var(--line) calc(100%/var(--W) - 1px),var(--line) calc(100%/var(--W)))}
+.ghead .gtrack{display:grid;grid-template-columns:repeat(var(--W),minmax(0,1fr));background:none}
+.ghead .gname{font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.mo{grid-row:1;font-size:13px;font-weight:700;color:var(--muted);padding:4px 6px;border-left:1px solid var(--line);letter-spacing:.04em}
+.wk{grid-row:2;font-size:13px;text-align:center;color:var(--muted);padding:2px 0 4px;font-variant-numeric:tabular-nums}
+.wk.cur{color:var(--surface);background:var(--navy);font-weight:700}
+.past{position:absolute;top:0;bottom:0;left:0;background:color-mix(in srgb,var(--muted) 12%,transparent);pointer-events:none}
+.now{position:absolute;top:0;bottom:0;width:2px;background:var(--navy);pointer-events:none;z-index:1}
+.block{position:absolute;top:4px;bottom:4px;background:repeating-linear-gradient(135deg,var(--warn-soft) 0 6px,transparent 6px 11px);border:1px dashed var(--warn);pointer-events:none;}
+.bar{position:absolute;top:9px;height:34px;border-radius:2px;border:0;display:flex;align-items:center;justify-content:center;font:700 13px var(--font-ui);cursor:grab;touch-action:none;user-select:none;padding:0 10px 0 6px;white-space:nowrap;overflow:hidden;z-index:3}
+.bar.d{background:var(--bar-d);color:var(--bar-d-text)}
+.bar.f{background:#f2a900;color:#0c1a33}
+.bar.b{background:var(--navy-soft);color:var(--ink);border:2px solid var(--navy)}
+.bar.bad{outline:3px solid var(--warn);outline-offset:1px}
+.bar.locked{cursor:default}
+.bar.locked::before{content:"Started · ";font-weight:600}
+.bar.dragging{cursor:grabbing;box-shadow:0 6px 16px rgba(1,33,105,.35)}
+.grip{position:absolute;right:0;top:0;bottom:0;width:12px;cursor:ew-resize;background:linear-gradient(90deg,transparent,rgba(0,0,0,.18))}
+.launch{position:absolute;top:0;bottom:0;right:0;width:3px;background:#f2a900;z-index:1}
+.lrow .gname{background:var(--bg)}
+.lrow .gtrack{display:grid;grid-template-columns:repeat(var(--W),minmax(0,1fr));background:none}
+.lc{position:relative;display:grid;align-content:center;justify-items:center;padding:6px 2px 14px;border-left:1px solid var(--line);font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink)}
+.lc .fill{position:absolute;left:4px;bottom:5px;height:5px;width:0;background:var(--navy)}
+.lc span{position:relative}
+.lc.over{background:var(--warn-soft)}
+.lc.over .fill{background:var(--warn)}
+.lc.over span{color:var(--warn);font-weight:700}
+.lc.off span{color:var(--muted)}
+.ghelp{font-size:15px;color:var(--muted);margin:0}
+
+/* issues + score */
+.issues{display:grid;gap:8px}
+.issue{border-left:3px solid var(--warn);background:var(--surface);padding:8px 12px;font-size:15px}
+.issue.good{border-color:var(--ok)}
+.score{background:var(--surface);border:1px solid var(--line);border-top:3px solid #f2a900;padding:20px;display:grid;gap:12px}
+.score h3{font-size:26px}
+.score ul{margin:0;padding-left:20px;display:grid;gap:8px}
+
+/* email */
+.mail{display:grid;gap:10px}
+.mail textarea{width:100%;min-height:330px;font:16px/1.6 var(--font-ui);color:var(--ink);background:var(--surface);border:1px solid var(--muted);border-radius:2px;padding:14px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.small{font-size:14px;color:var(--muted);margin:0}
+
+.notes{background:var(--surface);border:1px solid var(--line);border-left:4px solid #f2a900;padding:22px;display:grid;gap:12px}
+.notes h2{font-size:24px}
+.notes ul{margin:0;padding-left:20px;display:grid;gap:8px;color:var(--muted)}
+.notes ul b{color:var(--ink)}
+footer{padding-top:18px;border-top:1px solid var(--line);font-size:14px;color:var(--muted);display:grid;gap:6px}
+
+@media (max-width:860px){
+  .brief{grid-template-columns:1fr}
+  .facts{grid-template-columns:1fr}
+  .facts dt{border-bottom:0;padding-bottom:0}
+  .grow{grid-template-columns:170px minmax(0,1fr)}
+  .gantt{min-width:700px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<style>html,body{margin:0}</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="mh-in">
+    <div><span class="mh-kicker">Sample faculty consultation · Candler School of Theology</span><span class="mh-course">Course build: Introduction to Christian Worship (hybrid M.Div.)</span></div>
+    <span class="mh-mod">Eight-week build · launches with fall classes</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="faithband"><svg class="faiths" viewBox="0 0 408 40" role="img" aria-label="Symbols of several faith traditions: cross, Star of David, crescent and star, dharma wheel, lotus, and flaming chalice" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <g transform="translate(4,4)"><path d="M16 2v28M8 11h16"/></g>
+  <g transform="translate(72,4)"><path d="M16 2 28 23H4Z"/><path d="M16 30 4 9h24Z"/></g>
+  <g transform="translate(140,4)"><path d="M21 4a13 13 0 1 0 0 24a10 10 0 1 1 0-24Z"/><path d="m27 12 1.2 2.6 2.8.3-2.1 1.9.6 2.8-2.5-1.4-2.5 1.4.6-2.8-2.1-1.9 2.8-.3Z"/></g>
+  <g transform="translate(208,4)"><circle cx="16" cy="16" r="13"/><circle cx="16" cy="16" r="3"/><path d="M16 3v10M16 19v10M3 16h10M19 16h10M6.8 6.8l7 7M18.2 18.2l7 7M25.2 6.8l-7 7M13.8 18.2l-7 7"/></g>
+  <g transform="translate(276,4)"><path d="M16 26c-4-4-4-12 0-18c4 6 4 14 0 18Z"/><path d="M16 26c-5-1-10-6-11-13c6 0 10 6 11 13Z"/><path d="M16 26c5-1 10-6 11-13c-6 0-10 6-11 13Z"/><path d="M4 28h24"/></g>
+  <g transform="translate(344,4)"><path d="M6 12h20c0 7-4 11-10 11S6 19 6 12Z"/><path d="M16 23v6M10 30h12"/><path d="M16 10c-3-2-3-5 0-8c1 2 4 3 3 6c-.5 1.5-1.5 2-3 2Z"/></g>
+</svg><small>Built for learners from many faith traditions</small></div>
+    <span class="eyebrow">Instructional design project plan · interactive</span>
+    <h1>Eight Weeks to Launch</h1>
+    <p>A professor is moving a residential worship course into the hybrid M.Div. You have eight weeks. Drag the work onto the timeline so nobody is overloaded, then run the build week by week as real problems come up, and send the professor a status update you could actually use.</p>
+    <p class="byline">Designed by <b>Keith Pace, D.M.E.</b> as a sample for Candler's Office of Digital Learning</p>
+  </div>
+
+  <!-- I. BRIEF -->
+  <section id="brief">
+    <div class="sec-head">
+      <span class="step">Part I · The brief</span>
+      <h2>What you are building, and with whom</h2>
+    </div>
+    <div class="brief">
+      <div style="display:grid;gap:18px">
+        <dl class="facts">
+          <dt>Course</dt><dd>Introduction to Christian Worship, rebuilt for the hybrid M.Div. (two-thirds online, one on-campus intensive)</dd>
+          <dt>Faculty partner</dt><dd>A professor of worship who has taught the course in person for years</dd>
+          <dt>Your role</dt><dd>Instruction content developer, Office of Digital Learning</dd>
+          <dt>Deadline</dt><dd>Course opens to students at the end of week 8, the first day of fall classes</dd>
+          <dt>Tools</dt><dd>Canvas, Articulate Storyline, Studio 250 for lecture video, captioning vendor</dd>
+        </dl>
+        <table class="capt" aria-label="Weekly hours available">
+          <thead><tr><th>Weeks</th><th>Faculty partner</th><th>You</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td>1–2</td><td>6 h</td><td>20 h</td><td>Faculty partner is finishing a summer intensive</td></tr>
+            <tr><td>3–6</td><td>10 h</td><td>20 h</td><td>Her summer research weeks</td></tr>
+            <tr><td>6</td><td>10 h</td><td>10 h</td><td>You are in staff training half the week</td></tr>
+            <tr><td>7–8</td><td>6 h</td><td>20 h</td><td>Orientation and fall prep</td></tr>
+          </tbody>
+        </table>
+        <p class="small">Studio 250 is booked for a conference in week 5, so no recording can happen then.</p>
+      </div>
+      <div class="quote">
+        <span class="step">Project goals</span>
+        <ul style="margin:0;padding-left:20px;display:grid;gap:6px">
+          <li>Online students worship together, not just read about worship.</li>
+          <li>Keep faculty time light while finals are underway.</li>
+          <li>Launch fully accessible on the first day of classes.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- II. PLAN AND RUN -->
+  <section id="plan">
+    <div class="sec-head">
+      <span class="step">Part II · Plan, then run the build</span>
+      <h2>Build the timeline</h2>
+      <p id="ghelp">A first draft is already on the timeline, and it has problems. <b>Drag a bar</b> to move a task and <b>drag its right edge</b> to make it longer or shorter. Spreading a task over more weeks lowers the hours it needs each week. With a keyboard, focus a bar and press the left or right arrow to move it; hold Shift with the arrows to change its length. The workload rows at the bottom turn red when someone is overbooked.</p>
+    </div>
+
+    <div class="toolbar">
+      <div class="weeknow"><span class="small">Now</span><b id="nowLabel">Planning, before week 1</b></div>
+      <span class="status risk" id="statusPill" role="status">At risk · 5 problems</span>
+      <div class="row">
+        <button class="btn" id="advance">Start the build</button>
+        <button class="btn ghost" id="restart">Start over</button>
+      </div>
+    </div>
+
+    <div id="eventHost"></div>
+
+    <div class="legend" aria-hidden="true">
+      <span><i class="sw" style="background:var(--bar-d)"></i>You lead</span>
+      <span><i class="sw" style="background:#f2a900"></i>Faculty leads</span>
+      <span><i class="sw" style="background:var(--navy-soft);border:2px solid var(--navy)"></i>Shared</span>
+      <span><i class="sw" style="background:repeating-linear-gradient(135deg,var(--warn-soft) 0 4px,transparent 4px 7px);border:1px dashed var(--warn)"></i>Unavailable</span>
+      <span><i class="sw" style="background:#f2a900;width:4px"></i>Classes begin</span>
+    </div>
+
+    <div class="gwrap"><div class="gantt" id="gantt" aria-describedby="ghelp"></div></div>
+
+    <div class="issues" id="issues" aria-live="polite"></div>
+    <div id="scoreHost"></div>
+  </section>
+
+  <!-- III. EMAIL -->
+  <section id="mail">
+    <div class="sec-head">
+      <span class="step">Part III · Communicate</span>
+      <h2>Send your faculty partner a weekly update</h2>
+      <p>The draft writes itself from your timeline, so it always shows the current plan. Edit it in your own voice. A good update is short, honest about risk, and tells the faculty partner exactly what you need from them.</p>
+    </div>
+    <div class="mail">
+      <label for="mailText" class="small">Draft email</label>
+      <textarea id="mailText"></textarea>
+      <div class="row">
+        <button class="btn" id="copyMail">Copy email</button>
+        <button class="btn ghost" id="regen">Rebuild from the timeline</button>
+        <span class="small" id="copyMsg" role="status"></span>
+      </div>
+    </div>
+  </section>
+
+  <aside class="notes" aria-label="Design notes">
+    <h2>Why this activity</h2>
+    <ul>
+      <li><b>It mirrors the job.</b> Candler's Office of Digital Learning partners with faculty to build Canvas courses for the hybrid M.Div. and online D.Min. This walks through that work: scoping, scheduling around a professor's real calendar, booking Studio 250, and protecting accessibility.</li>
+      <li><b>Real tradeoffs, not a quiz.</b> Every choice moves hours between people and weeks. Some quick fixes, such as launching with auto-captions, look efficient but break accessibility law and are flagged.</li>
+      <li><b>Uses beyond hiring.</b> The same planner works as a faculty onboarding tool for anyone new to building online courses, or as a project-management exercise for D.Min. students leading ministry projects.</li>
+      <li><b>Accessibility (WCAG 2.1 AA):</b> every drag has a keyboard equivalent, problems are listed in text and not only in color, and the timeline scrolls inside its own frame on small screens.</li>
+    </ul>
+  </aside>
+
+  <footer>
+    <span>Prepared by Keith Pace · keithpace@me.com · keithpace.com</span>
+    <span>The course scenario is fictional. This is an independent sample prepared for a job application, not an official page of Emory University or Candler School of Theology. Colors follow Emory's public brand palette for illustration only.</span>
+  </footer>
+</div>
+
+<script>
+document.documentElement.lang='en';
+(function(){
+const W=8;
+const BASE=[
+  {id:'kick', name:'Kickoff and course map', own:'b', f:3, d:6, start:1, dur:1, min:1, max:2, deps:[]},
+  {id:'outc', name:'Learning outcomes and module outlines', own:'f', f:6, d:4, start:1, dur:1, min:1, max:3, deps:['kick']},
+  {id:'shell',name:'Canvas shell from the Candler template', own:'d', f:0, d:6, start:2, dur:1, min:1, max:2, deps:['kick']},
+  {id:'rec',  name:'Record lectures in Studio 250', own:'f', f:10, d:4, start:4, dur:2, min:1, max:3, deps:['outc'], studio:true},
+  {id:'build',name:'Build the modules in Canvas', own:'d', f:5, d:24, start:3, dur:2, min:1, max:5, deps:['outc','shell']},
+  {id:'story',name:'Storyline worship simulations', own:'d', f:3, d:14, start:4, dur:2, min:1, max:4, deps:['outc']},
+  {id:'edit', name:'Edit and caption the videos', own:'d', f:2, d:10, start:6, dur:2, min:1, max:3, deps:['rec']},
+  {id:'qm',   name:'Accessibility and Quality Matters review', own:'d', f:2, d:8, start:7, dur:2, min:1, max:2, deps:['build','edit','story']},
+  {id:'walk', name:'Faculty walkthrough and revisions', own:'b', f:4, d:4, start:8, dur:1, min:1, max:1, deps:['qm']}
+];
+const STUDIO=[5];
+const fcap=w=>w<=2?6:(w<=6?10:6);
+const dcap=w=>w===6?10:20;
+const EVENTS={
+  2:{title:'Week 2: "Can we add a module?"',text:'After a conference, the faculty partner asks to add a module on worship in multilingual congregations. The module list was set at kickoff.',
+     opts:[{k:'add',t:'Add it now',s:'Adds 6 of your hours and 2 faculty hours to the Canvas build.',fb:'You kept the professor happy and absorbed real work mid-build. That only works if the timeline still holds.'},
+           {k:'defer',t:'Plan it as a spring update',s:'No change now. You write it into the spring revision plan.',fb:'A clean scope decision. You protected launch without saying no, and the idea lands in the spring update.'},
+           {k:'swap',t:'Swap it for an existing module',s:'Adds 3 of your hours. The faculty partner chooses which module comes out.',fb:'A smart trade: new content in, nearly no new work. This kind of negotiation keeps faculty partnerships healthy.'}]},
+  4:{title:'Week 4: The captioning vendor is behind',text:'The vendor says caption files will arrive a week later than promised.',
+     opts:[{k:'wait',t:'Accept the delay',s:'Editing and captioning must take at least one more week.',fb:'Honest and low-effort, as long as the later weeks can absorb it.'},
+           {k:'inhouse',t:'Caption in-house',s:'Adds 6 of your hours to editing and captioning.',fb:'You bought back time with your own hours. Fine if you had the slack.'},
+           {k:'auto',t:'Launch with auto-captions and fix them by week 3 of term',s:'No added hours now.',fb:'This looks efficient, but auto-captions are not accurate enough for accessibility compliance, and students with accommodations need accurate captions on day one. This was flagged as a launch risk.'}]},
+  6:{title:'Week 6: Accommodations come in',text:'Student Accessibility Services tells you two students in the first cohort need transcripts for all video and extended time on quizzes.',
+     opts:[{k:'qm',t:'Fold it into the accessibility review',s:'Adds 5 of your hours to the review.',fb:'Right call. Accommodations are part of the build, not an add-on.'},
+           {k:'prof',t:'Ask the faculty partner to write the transcripts',s:'Adds 4 faculty hours to the walkthrough week.',fb:'It works only if the faculty partner has the hours. In the last two weeks the faculty partner has only 6 hours a week, so check her workload row.'},
+           {k:'later',t:'Handle it after launch',s:'No added hours now.',fb:'Accommodations must be in place when the course opens. This was flagged as a launch risk.'}]}
+};
+let tasks,now,decisions,overHistory,flags,pending,mailDirty;
+function reset(){
+  tasks=BASE.map(t=>Object.assign({},t,{deps:t.deps.slice()}));
+  now=0;decisions=[];overHistory=0;flags=[];pending=null;mailDirty=false;
+  document.getElementById('scoreHost').innerHTML='';document.getElementById('eventHost').innerHTML='';
+  build();update();
+}
+const byId=id=>tasks.find(t=>t.id===id);
+const end=t=>t.start+t.dur-1;
+
+/* ---------- loads + issues ---------- */
+function loads(){
+  const f=Array(W+2).fill(0),d=Array(W+2).fill(0);
+  tasks.forEach(t=>{for(let w=t.start;w<=end(t)&&w<=W;w++){f[w]+=t.f/t.dur;d[w]+=t.d/t.dur;}});
+  return{f,d};
+}
+function issues(){
+  const out=[];const bad=new Set();
+  tasks.forEach(t=>{
+    t.deps.forEach(p=>{const P=byId(p);if(t.start<=end(P)){out.push('"'+t.name+'" starts before "'+P.name+'" is finished.');bad.add(t.id);}});
+    if(end(t)>W){out.push('"'+t.name+'" runs past the start of classes.');bad.add(t.id);}
+    if(t.studio&&STUDIO.some(w=>w>=t.start&&w<=end(t))){out.push('Recording overlaps week 5, when Studio 250 is booked.');bad.add(t.id);}
+  });
+  const L=loads();
+  for(let w=1;w<=W;w++){
+    if(L.f[w]>fcap(w)+0.05){out.push('Week '+w+': the faculty partner would need '+fmt(L.f[w])+' h but has '+fcap(w)+' h.');tasks.forEach(t=>{if(w>=t.start&&w<=end(t)&&t.f>0)bad.add(t.id)});}
+    if(L.d[w]>dcap(w)+0.05){out.push('Week '+w+': you would need '+fmt(L.d[w])+' h but have '+dcap(w)+' h.');tasks.forEach(t=>{if(w>=t.start&&w<=end(t)&&t.d>0)bad.add(t.id)});}
+  }
+  flags.forEach(x=>out.push(x));
+  return{out,bad,L};
+}
+const fmt=n=>Math.round(n*10)/10+'';
+
+/* ---------- gantt ---------- */
+const G=document.getElementById('gantt');
+const months=[['July',1],['August',5]];
+function build(){
+  let h='<div class="grow ghead"><div class="gname">Task · lead</div><div class="gtrack">';
+  months.forEach(([m,s])=>h+='<div class="mo" style="grid-column:'+s+' / span 4">'+m+'</div>');
+  for(let w=1;w<=W;w++)h+='<div class="wk" data-w="'+w+'">'+w+'</div>';
+  h+='</div></div>';
+  tasks.forEach(t=>{
+    const lead=t.own==='f'?'Faculty':t.own==='d'?'You':'Shared';
+    h+='<div class="grow" data-row="'+t.id+'"><div class="gname"><b>'+t.name+'</b><small><span class="own '+t.own+'">'+lead+'</span> · <span class="hrs"></span>'+(t.studio?'<br><span style="color:var(--warn);font-weight:600">Studio booked week 5</span>':'')+'</small></div><div class="gtrack">'+
+       (t.studio?STUDIO.map(w=>'<div class="block" style="left:calc('+(w-1)+'*100%/8);width:calc(100%/8)"></div>').join(''):'')+
+       '<div class="past"></div><div class="now"></div><div class="launch" aria-hidden="true"></div>'+
+       '<button type="button" class="bar '+t.own+'" data-id="'+t.id+'"><span class="lbl"></span><span class="grip" aria-hidden="true"></span></button></div></div>';
+  });
+  ['f','d'].forEach(k=>{
+    h+='<div class="grow lrow"><div class="gname"><b>'+(k==='f'?'Faculty':'You')+'</b><small>hours needed / available</small></div><div class="gtrack">';
+    for(let w=1;w<=W;w++)h+='<div class="lc" data-k="'+k+'" data-w="'+w+'"><i class="fill"></i><span></span></div>';
+    h+='</div></div>';
+  });
+  G.innerHTML=h;
+  G.querySelectorAll('.bar').forEach(wire);
+}
+function update(){
+  const {out,bad,L}=issues();
+  tasks.forEach(t=>{
+    const row=G.querySelector('[data-row="'+t.id+'"]');const bar=row.querySelector('.bar');
+    bar.style.left='calc('+(t.start-1)+'*100%/8 + 2px)';bar.style.width='calc('+t.dur+'*100%/8 - 4px)';
+    bar.querySelector('.lbl').textContent=t.dur+' wk';
+    const locked=now>=t.start&&now>0;bar.classList.toggle('locked',locked);bar.classList.toggle('bad',bad.has(t.id));
+    bar.setAttribute('aria-label',t.name+'. Weeks '+t.start+' to '+end(t)+', '+t.dur+' weeks. '+(locked?'Already started; you can only change its length. ':'Arrow keys move it. ')+'Shift plus arrow keys change length.'+(bad.has(t.id)?' Has a problem.':''));
+    row.querySelector('.hrs').textContent=(t.f?t.f+' h faculty':'')+(t.f&&t.d?', ':'')+(t.d?t.d+' h you':'');
+    row.querySelector('.past').style.width='calc('+Math.max(0,now-1)+'*100%/8)';
+    const nw=row.querySelector('.now');nw.hidden=now<1||now>W;nw.style.left='calc('+(now-1)+'*100%/8)';
+  });
+  G.querySelectorAll('.wk').forEach(e=>e.classList.toggle('cur',+e.dataset.w===now));
+  G.querySelectorAll('.lc').forEach(c=>{
+    const w=+c.dataset.w,k=c.dataset.k,need=L[k][w],cap=k==='f'?fcap(w):dcap(w);
+    const over=need>cap+0.05;c.classList.toggle('over',over);c.classList.toggle('off',cap===0);
+    c.querySelector('span').textContent=fmt(need)+'/'+cap+(over?' !':'');
+    c.querySelector('.fill').style.width='calc((100% - 8px) * '+Math.min(1,cap?need/cap:(need?1:0))+')';
+    c.title='Week '+w+': '+fmt(need)+' hours needed, '+cap+' available'+(over?', overbooked':'');
+  });
+  const pill=document.getElementById('statusPill');
+  pill.className='status '+(out.length?'risk':'ok');
+  pill.textContent=out.length?'At risk · '+out.length+' problem'+(out.length>1?'s':''):'On track';
+  const box=document.getElementById('issues');
+  box.innerHTML=out.length?'<b>Problems to fix</b>'+out.map(x=>'<div class="issue">'+x+'</div>').join(''):'<div class="issue good"><b>The plan holds.</b> No one is overbooked, every task follows the ones it depends on, and the course is ready for the first day of classes.</div>';
+  document.getElementById('nowLabel').textContent=now===0?'Planning, before week 1':now>W?'Classes have begun':'Week '+now+' of '+W;
+  const adv=document.getElementById('advance');
+  adv.textContent=now===0?'Start the build':now>=W?'Launch the course':'Advance to week '+(now+1);
+  adv.disabled=!!pending||now>W;
+  if(!mailDirty)writeMail(out);
+}
+
+/* drag + keyboard */
+function wire(bar){
+  const t=byId(bar.dataset.id);let drag=null;
+  bar.addEventListener('pointerdown',e=>{
+    const locked=now>=t.start&&now>0;const resize=e.target.classList.contains('grip');
+    if(locked&&!resize)return;
+    e.preventDefault();bar.setPointerCapture(e.pointerId);
+    const col=bar.parentElement.getBoundingClientRect().width/W;
+    drag={x:e.clientX,col,start:t.start,dur:t.dur,resize};bar.classList.add('dragging');
+  });
+  bar.addEventListener('pointermove',e=>{
+    if(!drag)return;const dw=Math.round((e.clientX-drag.x)/drag.col);
+    if(drag.resize){t.dur=Math.max(minDur(t),Math.min(t.max,drag.dur+dw,W-t.start+1+1));}
+    else{t.start=Math.max(1,Math.min(W,drag.start+dw));if(now>0)t.start=Math.max(now+1,t.start);}
+    update();
+  });
+  const stop=()=>{if(drag){drag=null;bar.classList.remove('dragging');update();}};
+  bar.addEventListener('pointerup',stop);bar.addEventListener('pointercancel',stop);
+  bar.addEventListener('keydown',e=>{
+    if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;e.preventDefault();
+    const dir=e.key==='ArrowRight'?1:-1;const locked=now>=t.start&&now>0;
+    if(e.shiftKey)t.dur=Math.max(minDur(t),Math.min(t.max,t.dur+dir));
+    else if(!locked){t.start=Math.max(now>0?now+1:1,Math.min(W,t.start+dir));}
+    update();
+  });
+}
+function minDur(t){let m=t.min;if(now>0&&now>=t.start)m=Math.max(m,now-t.start+1);return m;}
+
+/* ---------- running the summer ---------- */
+document.getElementById('advance').addEventListener('click',()=>{
+  if(pending)return;
+  if(now>=1&&now<=W){const L=loads();if(L.f[now]>fcap(now)+0.05||L.d[now]>dcap(now)+0.05)overHistory++;}
+  if(now>=W){now=W+1;update();score();return;}
+  now++;update();
+  if(EVENTS[now])showEvent(now);
+});
+function showEvent(w){
+  const ev=EVENTS[w];pending=w;update();
+  const host=document.getElementById('eventHost');
+  host.innerHTML='<div class="event" role="region" aria-label="Something came up"><span class="step">Something came up</span><h3>'+ev.title+'</h3><p>'+ev.text+'</p><div class="choices">'+
+    ev.opts.map((o,i)=>'<button class="choice" data-i="'+i+'"><b>'+o.t+'</b><span>'+o.s+'</span></button>').join('')+'</div></div>';
+  host.querySelector('.choice').focus();
+  host.querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>{
+    const o=ev.opts[+b.dataset.i];apply(o.k);decisions.push({w,title:ev.title,choice:o.t,fb:o.fb});
+    host.innerHTML='<div class="event"><span class="step">Decision made · week '+w+'</span><p><b>'+o.t+'.</b> '+o.fb+'</p><p class="small">Check the timeline. The change may have created new problems to fix before you advance.</p></div>';
+    pending=null;update();
+  }));
+}
+function apply(k){
+  const T=byId;
+  if(k==='add'){T('build').d+=6;T('build').f+=2;}
+  if(k==='swap'){T('build').d+=3;}
+  if(k==='wait'){const e=T('edit');e.min+=1;if(e.dur<e.min)e.dur=e.min;}
+  if(k==='inhouse'){T('edit').d+=6;}
+  if(k==='auto'){flags.push('Launch risk: auto-captions do not meet accessibility requirements for students who need accurate captions.');}
+  if(k==='qm'){T('qm').d+=5;}
+  if(k==='prof'){T('walk').f+=4;}
+  if(k==='later'){flags.push('Launch risk: required accommodations (transcripts, extended quiz time) will not be ready when the course opens.');}
+}
+function score(){
+  const {out}=issues();
+  const ok=out.length===0;
+  document.getElementById('eventHost').innerHTML='';
+  document.getElementById('scoreHost').innerHTML='<div class="score" tabindex="-1" id="scoreBox"><span class="step">Classes begin</span><h3>'+(ok?'The course launched on time and accessible.':'The course launched with '+out.length+' open problem'+(out.length>1?'s':'')+'.')+'</h3>'+
+    '<p>'+(overHistory?'Someone was overbooked in '+overHistory+' week'+(overHistory>1?'s':'')+' along the way. In real life that shows up as missed emails, rushed work, or a professor who quietly stops replying.':'No one was overbooked in any week of the build.')+'</p>'+
+    '<ul>'+decisions.map(d=>'<li><b>'+d.title.replace(/^Week \d+: /,'')+'</b>: you chose "'+d.choice+'." '+d.fb+'</li>').join('')+'</ul>'+
+    '<button class="btn ghost" id="again">Plan it again</button></div>';
+  document.getElementById('again').onclick=reset;document.getElementById('scoreBox').focus();
+}
+document.getElementById('restart').addEventListener('click',reset);
+
+/* ---------- status email ---------- */
+const mail=document.getElementById('mailText');
+function writeMail(out){
+  const wk=now===0?'planning week':now>W?'launch week':'week '+now;
+  const done=tasks.filter(t=>now>0&&end(t)<now).map(t=>t.name);
+  const lo=Math.max(1,now),hi=lo+1;
+  const nowT=tasks.filter(t=>t.start<=hi&&end(t)>=lo).map(t=>t.name);
+  const asks=tasks.filter(t=>t.f>0&&t.start<=lo+2&&end(t)>=lo).map(t=>t.name+' (about '+fmt(t.f/t.dur)+' h a week, weeks '+t.start+'–'+end(t)+')');
+  const lines=[
+    'Subject: Worship course build, '+wk+' update',
+    '',
+    'Dear Professor [Name],',
+    '',
+    'Overall: '+(out.length?'At risk. '+out.length+' issue'+(out.length>1?'s':'')+' to resolve. Launch is still set for the first day of fall classes.':'On track for the first day of fall classes.'),
+    '',
+    'Finished: '+(done.length?done.join('; '):'Nothing yet. We are just getting started.'),
+    'Underway this week and next: '+(nowT.length?nowT.join('; '):'Nothing scheduled.'),
+    'What I need from you: '+(asks.length?asks.join('; '):'Nothing in the next two weeks. Enjoy the break.'),
+    'Risks: '+(out.length?out.slice(0,3).join(' '):'None right now.'),
+  ];
+  if(decisions.length)lines.push('Decisions so far: '+decisions.map(d=>d.choice).join('; ')+'.');
+  lines.push('','Happy to talk through any of this. Just reply or grab a time on my calendar.','','Keith');
+  mail.value=lines.join('\n');
+}
+mail.addEventListener('input',()=>{mailDirty=true;});
+document.getElementById('regen').addEventListener('click',()=>{mailDirty=false;update();document.getElementById('copyMsg').textContent='Rebuilt from the current timeline.';});
+document.getElementById('copyMail').addEventListener('click',()=>{
+  const msg=document.getElementById('copyMsg');
+  try{navigator.clipboard.writeText(mail.value).then(()=>msg.textContent='Copied.',()=>{mail.select();msg.textContent='Selected. Press Ctrl+C or Cmd+C to copy.';});}
+  catch(e){mail.select();msg.textContent='Selected. Press Ctrl+C or Cmd+C to copy.';}
+});
+
+reset();
+})();
+</script>
+
+</body>
+</html>
